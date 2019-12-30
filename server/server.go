@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"syscall"
 	"time"
 )
 
@@ -58,7 +59,7 @@ func main (){
 	}
 
 	logrus.Infof("server listen at %s",p)
-	l, err := net.Listen("tcp", ":"+p)
+	l, err := net.Listen("tcp", "0.0.0.0:"+p)
 	if err != nil {
 		logrus.Fatalln(err)
 	}
@@ -81,13 +82,24 @@ func handleConnection(conn net.Conn) {
 	rb := make([]byte, 3000)
 
 	conn.SetDeadline(time.Now().Add(READ_TIMEOUT))
+
 	n,err := conn.Read(rb)
 	if nil != err {
-		logrus.Errorln(err)
-		writeBack(conn, []byte(ERR_SERVER))
+		if opErr, ok := err.(*net.OpError); ok {
+			if syscallErr, ok := opErr.Err.(*os.SyscallError); ok {
+				// may caused be loadbalance healthy check
+				if syscallErr.Err == syscall.ECONNRESET {
+					return
+				}
+			}
+		}else{
+			writeBack(conn, []byte(ERR_SERVER))
+		}
+
 		return
 	}
 
+	logrus.Infoln("Get info From:",conn.RemoteAddr())
 	// Unmarshal updated rules
 	var updateRg rule.RuleGroups
 	if err := yaml.Unmarshal(rb[:n], &updateRg); err != nil {

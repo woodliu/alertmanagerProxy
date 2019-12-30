@@ -25,7 +25,10 @@ Options:
 	flag.PrintDefaults()
 }
 
-const READ_TIMEOUT = time.Millisecond * 10000
+const (
+	DIAL_TIMEOUT = time.Millisecond * 10000
+	READ_TIMEOUT = time.Millisecond * 10000
+)
 
 func main(){
 	flag.BoolVar(&h, "h", false, "help")
@@ -49,7 +52,7 @@ func main(){
 		logrus.Fatalln("Must specify a target")
 	}
 
-	conn, err := net.Dial("tcp", t)
+	conn, err := net.DialTimeout("tcp", t, DIAL_TIMEOUT)
 	if err != nil {
 		logrus.Fatalln(err)
 	}
