@@ -2,9 +2,12 @@
 
 Update Alertmanager rules through update the mounted rule files. This tool is only for update one rule group , can't add new rule group.
 
-### Workflow
+### Work Flow
 
 ![](./image/workflow.png)
+
+- Step 1： Modify the rules files；
+- Step 2： Reboot container.
 
 ### Usage
 
@@ -18,8 +21,13 @@ Update Alertmanager rules through update the mounted rule files. This tool is on
 
   ```
   ./client --rulefile=="/home/updatefile.yaml" -t "10.10.10.1:2000"
+  ```
+  
+  Get info:
+
+  ```
   ./client --show all -t "10.10.10.1:2000"
   ./client --show ${rule_group_name} -t "10.10.10.1:2000"
   ```
-
+  
   
