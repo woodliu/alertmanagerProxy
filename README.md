@@ -18,6 +18,8 @@ Update Alertmanager rules through update the mounted rule files. This tool is on
 
   ```
   ./client --rulefile=="/home/updatefile.yaml" -t "10.10.10.1:2000"
+  ./client --show all -t "10.10.10.1:2000"
+  ./client --show ${rule_group_name} -t "10.10.10.1:2000"
   ```
 
   
