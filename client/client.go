@@ -31,7 +31,7 @@ Options:
 
 const (
 	DIAL_TIMEOUT = time.Millisecond * 10000
-	READ_TIMEOUT = time.Millisecond * 10000000
+	READ_TIMEOUT = time.Millisecond * 10000
 )
 
 func main() {
@@ -102,7 +102,7 @@ func main() {
 		return
 	}
 
-	rb := make([]byte, 1000)
+	rb := make([]byte, 3000)
 	n, err := conn.Read(rb)
 	if err != nil {
 		logrus.Errorln(err)
